@@ -2,6 +2,7 @@ use arc_guard::Guard;
 use gtk::*;
 use crate::expressvpn::*;
 use super::indicator::Indicator;
+use crate::asset;
 
 pub struct StatusChecker {
     indicator: Guard<Indicator>,
@@ -22,12 +23,12 @@ impl StatusChecker {
             .expect("Output wasn't a valid utf8.");
 
         if output_string.contains("Connecting") || output_string.contains("Connected") {
-            self.change_icon("on.png");
+            self.change_icon(asset::IMAGE_NAME_ON);
             self.change_menu_label("Disconnect");
         }
 
         if output_string.contains("Not connected") {
-            self.change_icon("logo.png");
+            self.change_icon(asset::IMAGE_NAME_OFF);
             self.change_menu_label("Connect");
         }
     }

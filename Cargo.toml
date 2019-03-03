@@ -1,13 +1,16 @@
 [package]
-name = "express-vpn"
+name = "express-vpn-gui"
 version = "0.1.0"
 authors = ["kunicmarko20 <kunicmarko20@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+arc_guard = { path = "arc_guard" }
+clap = "2.32.0"
 dirs="1.0.4"
 glib="0.5.0"
 gtk="0.4.0"
 gtk-sys="0.6.0"
 libappindicator="0.4.0"
-arc_guard = { path = "arc_guard" }
+libc = "0.2.49"
+structopt = "0.2.13"

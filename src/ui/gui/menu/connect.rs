@@ -2,6 +2,7 @@ use crate::expressvpn::*;
 use arc_guard::Guard;
 use gtk::*;
 use super::super::Indicator;
+use crate::asset;
 
 pub struct Connect;
 
@@ -14,7 +15,7 @@ impl Connect {
             let output = ExpressVPNCommand::execute(result_by_label.0);
 
             if output.status.success() {
-                menu_item.set_label(result_by_label.2);
+                menu_item.set_label(result_by_label.2.as_str());
 
                 let image_name = result_by_label.1.clone();
                 indicator.execute(move |indicator| {
@@ -30,19 +31,40 @@ impl Connect {
         menu_item
     }
 
-    fn result_by_label(label: Option<String>) -> (ExpressVPNSubCommand, &'static str, &'static str) {
-        match label.unwrap().as_ref() {
-            "Connect" => (
+    fn result_by_label(label: Option<String>) -> (ExpressVPNSubCommand, &'static str, ConnectLabel) {
+        match ConnectLabel::from_string(label.unwrap()) {
+            ConnectLabel::CONNECT => (
                 ExpressVPNSubCommand::CONNECT,
-                "on.png",
-                "Disconnect"
+                asset::IMAGE_NAME_ON,
+                ConnectLabel::DISCONNECT
             ),
-            "Disconnect" => (
+            ConnectLabel::DISCONNECT => (
                 ExpressVPNSubCommand::DISCONNECT,
-                "logo.png",
-                "Connect"
-            ),
-            _ => panic!("Unrecognized label.")
+                asset::IMAGE_NAME_OFF,
+                ConnectLabel::CONNECT
+            )
+        }
+    }
+}
+
+enum ConnectLabel {
+    CONNECT,
+    DISCONNECT,
+}
+
+impl ConnectLabel {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            ConnectLabel::CONNECT => "Connect",
+            ConnectLabel::DISCONNECT => "Disconnect",
+        }
+    }
+
+    pub fn from_string(label: String) -> ConnectLabel {
+        match label.as_ref() {
+            "Connect" => ConnectLabel::CONNECT,
+            "Disconnect" => ConnectLabel::DISCONNECT,
+            _ => panic!("Unrecognized label."),
         }
     }
 }

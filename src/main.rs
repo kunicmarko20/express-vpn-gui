@@ -1,6 +1,7 @@
 fn main() {
-    self::ui::gui::init();
+    ui::cli::application::Application::run();
 }
 
+mod asset;
 mod expressvpn;
 mod ui;
