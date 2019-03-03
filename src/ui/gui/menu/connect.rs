@@ -1,12 +1,12 @@
 use crate::expressvpn::*;
-use std::sync::{Arc, Mutex};
+use arc_guard::Guard;
 use gtk::*;
 use super::super::Indicator;
 
 pub struct Connect;
 
 impl Connect {
-    pub fn create(indicator: Arc<Mutex<Indicator>>) -> MenuItem {
+    pub fn create(indicator: Guard<Indicator>) -> MenuItem {
         let menu_item = MenuItem::new_with_label("");
 
         menu_item.connect_activate(move |menu_item| {
@@ -15,9 +15,12 @@ impl Connect {
 
             if output.status.success() {
                 menu_item.set_label(result_by_label.2);
-                let indicator_clone = indicator.clone();
-                let mut indicator_clone = indicator_clone.lock().unwrap();
-                indicator_clone.change_icon(result_by_label.1);
+
+                let image_name = result_by_label.1.clone();
+                indicator.execute(move |indicator| {
+                    let mut indicator = indicator.lock().expect("Unable to lock indicator from Connect.");
+                    indicator.change_icon(image_name);
+                });
                 return;
             }
 

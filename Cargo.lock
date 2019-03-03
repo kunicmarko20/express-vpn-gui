@@ -15,6 +15,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "arc_guard"
+version = "0.1.0"
+
+[[package]]
 name = "argon2rs"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -239,6 +243,7 @@ dependencies = [
 name = "express-vpn"
 version = "0.1.0"
 dependencies = [
+ "arc_guard 0.1.0",
  "dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "glib 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gtk 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",

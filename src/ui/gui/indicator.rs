@@ -1,6 +1,7 @@
 use libappindicator::{AppIndicator, AppIndicatorStatus};
 use std::path::PathBuf;
 use gtk::*;
+use std::sync::{Arc, Mutex};
 
 pub struct Indicator {
     app_indicator: AppIndicator,
@@ -25,7 +26,8 @@ impl Indicator {
         Indicator{app_indicator, path_to_images}
     }
 
-    pub fn append_menu(&mut self, mut menu: Menu) {
+    pub fn append_menu(&mut self, menu: Arc<Mutex<Menu>>) {
+        let mut menu = menu.lock().unwrap();
         menu.show_all();
         &self.app_indicator.set_menu(&mut menu);
     }

@@ -1,28 +1,32 @@
 use gtk::*;
-use std::sync::{Arc, Mutex};
 use self::status_checker::StatusChecker;
 use self::indicator::Indicator;
 use self::menu::connect::Connect as MenuItemConnect;
+use arc_guard::Guard;
 
 pub fn init() {
     gtk::init().unwrap();
 
-    let menu = gtk::Menu::new();
-    let indicator = Arc::new(Mutex::new(Indicator::new()));
-    let menu_item_connect = Arc::new(Mutex::new(MenuItemConnect::create(indicator.clone())));
+    let menu = Guard::new(gtk::Menu::new());
+    let indicator = Guard::new(Indicator::new());
+    let menu_item_connect = Guard::new(MenuItemConnect::create(indicator.clone()));
 
-    let menu_item_connect_clone = menu_item_connect.clone();
-    let menu_item_connect_clone = menu_item_connect_clone.lock().unwrap();
-    menu.append(&*menu_item_connect_clone);
-    drop(menu_item_connect_clone);
-    
-    menu.append(&gtk::SeparatorMenuItem::new());
-    menu.append(&self::menu::quit::Quit::create());
+    menu_item_connect.execute(|menu_item_connect| {
+        menu.execute(|menu| {
+            let menu_item_connect = menu_item_connect.lock().expect("Unable to lock menu_item from init.");
+            let menu = menu.lock().expect("Unable to lock menu from init.");
+            menu.append(&*menu_item_connect);
+            menu.append(&gtk::SeparatorMenuItem::new());
+            menu.append(&self::menu::quit::Quit::create());
+        });
+    });
 
-    let indicator_clone = indicator.clone();
-    let mut indicator_clone = indicator_clone.lock().unwrap();
-    indicator_clone.append_menu(menu);
-    drop(indicator_clone);
+    indicator.execute(|indicator| {
+        menu.execute(|menu| {
+            let mut indicator = indicator.lock().expect("Unable to lock indicator from init.");
+            indicator.append_menu(menu);
+        });
+    });
 
     let mut status_checker = StatusChecker::new(indicator.clone(), menu_item_connect.clone());
 
