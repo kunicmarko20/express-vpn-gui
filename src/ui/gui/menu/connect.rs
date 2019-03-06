@@ -1,5 +1,5 @@
 use crate::expressvpn::*;
-use arc_guard::Guard;
+use arc_guard::ArcGuard;
 use gtk::*;
 use super::super::Indicator;
 use crate::asset;
@@ -7,7 +7,7 @@ use crate::asset;
 pub struct Connect;
 
 impl Connect {
-    pub fn create(indicator: Guard<Indicator>) -> MenuItem {
+    pub fn create(indicator: ArcGuard<Indicator>) -> MenuItem {
         let menu_item = MenuItem::new_with_label("");
 
         menu_item.connect_activate(move |menu_item| {

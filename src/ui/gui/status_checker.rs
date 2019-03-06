@@ -1,18 +1,18 @@
-use arc_guard::Guard;
+use arc_guard::ArcGuard;
 use gtk::*;
 use crate::expressvpn::*;
 use super::indicator::Indicator;
 use crate::asset;
 
 pub struct StatusChecker {
-    indicator: Guard<Indicator>,
-    menu_item: Guard<MenuItem>,
+    indicator: ArcGuard<Indicator>,
+    menu_item: ArcGuard<MenuItem>,
 }
 
 unsafe impl Send for StatusChecker {}
 
 impl StatusChecker {
-    pub fn new(indicator: Guard<Indicator>, menu_item: Guard<MenuItem>) -> Self {
+    pub fn new(indicator: ArcGuard<Indicator>, menu_item: ArcGuard<MenuItem>) -> Self {
         StatusChecker {indicator, menu_item}
     }
 

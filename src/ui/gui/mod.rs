@@ -2,14 +2,14 @@ use gtk::*;
 use self::status_checker::StatusChecker;
 use self::indicator::Indicator;
 use self::menu::connect::Connect as MenuItemConnect;
-use arc_guard::Guard;
+use arc_guard::ArcGuard;
 
 pub fn init() {
     gtk::init().unwrap();
 
-    let menu = Guard::new(gtk::Menu::new());
-    let indicator = Guard::new(Indicator::new());
-    let menu_item_connect = Guard::new(MenuItemConnect::create(indicator.clone()));
+    let menu = ArcGuard::new(gtk::Menu::new());
+    let indicator = ArcGuard::new(Indicator::new());
+    let menu_item_connect = ArcGuard::new(MenuItemConnect::create(indicator.clone()));
 
     menu_item_connect.execute(|menu_item_connect| {
         menu.execute(|menu| {
