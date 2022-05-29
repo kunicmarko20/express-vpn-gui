@@ -58,3 +58,23 @@ SUBCOMMANDS:
     uninstall    Removes everything
 
 ```
+
+Development
+===========
+
+Building/installing from source can be done via a [Rust toolchain][rustup].
+
+Additionally, you will need to install the development packages for GTK3 and libappindicator.  On Ubuntu 20.04
+this can be done with:
+
+```bash
+$ sudo apt install libgtk-3-dev libappindicator3-dev
+```
+
+You can then build install using `cargo`:
+
+```bash
+$ cargo install --path .
+```
+
+[rustup]: https://rustup.rs/
