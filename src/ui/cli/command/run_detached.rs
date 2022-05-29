@@ -10,11 +10,13 @@ pub struct RunDetached {}
 
 impl Command for RunDetached {
     fn execute(&self) {
-        std::process::Command::new(asset::EXECUTABLE_NAME)
-            .before_exec(Self::owned_pgid)
-            .arg("run")
-            .output()
-            .expect("failed to execute process");
+        unsafe {
+            std::process::Command::new(asset::EXECUTABLE_NAME)
+                .pre_exec(Self::owned_pgid)
+                .arg("run")
+                .output()
+                .expect("failed to execute process");
+        }
     }
 }
 
