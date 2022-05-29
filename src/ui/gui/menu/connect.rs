@@ -1,6 +1,7 @@
 use crate::expressvpn::*;
 use arc_guard::ArcGuard;
 use gtk::*;
+use glib::GString;
 use super::super::Indicator;
 use crate::asset;
 
@@ -8,7 +9,7 @@ pub struct Connect;
 
 impl Connect {
     pub fn create(indicator: ArcGuard<Indicator>) -> MenuItem {
-        let menu_item = MenuItem::new_with_label("");
+        let menu_item = MenuItem::with_label("");
 
         menu_item.connect_activate(move |menu_item| {
             let result_by_label = Self::result_by_label(menu_item.get_label());
@@ -31,8 +32,8 @@ impl Connect {
         menu_item
     }
 
-    fn result_by_label(label: Option<String>) -> (ExpressVPNSubCommand, &'static str, ConnectLabel) {
-        match ConnectLabel::from_string(label.unwrap()) {
+    fn result_by_label(label: Option<GString>) -> (ExpressVPNSubCommand, &'static str, ConnectLabel) {
+        match ConnectLabel::from_string(label.unwrap().as_str()) {
             ConnectLabel::CONNECT => (
                 ExpressVPNSubCommand::CONNECT,
                 asset::IMAGE_NAME_ON,
@@ -60,7 +61,7 @@ impl ConnectLabel {
         }
     }
 
-    pub fn from_string(label: String) -> ConnectLabel {
+    pub fn from_string<S: AsRef<str>>(label: S) -> ConnectLabel {
         match label.as_ref() {
             "Connect" => ConnectLabel::CONNECT,
             "Disconnect" => ConnectLabel::DISCONNECT,

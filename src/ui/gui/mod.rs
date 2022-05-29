@@ -32,7 +32,7 @@ pub fn init() {
 
     std::thread::spawn(move || {
         loop {
-            &status_checker.run();
+            let _ = &status_checker.run();
 
             std::thread::sleep(
                 std::time::Duration::from_secs(5)

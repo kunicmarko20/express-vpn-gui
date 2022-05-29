@@ -19,7 +19,7 @@ impl Indicator {
             image_path.to_str().expect("Path couldn't be converted to string.")
         );
 
-        app_indicator.set_status(AppIndicatorStatus::APP_INDICATOR_STATUS_ACTIVE);
+        app_indicator.set_status(AppIndicatorStatus::Active);
 
         let mut path_to_images = dirs::data_dir().expect("System data dir couldn't be fetched.");
         path_to_images.push(asset::DATA_DIRECTORY);
@@ -30,7 +30,7 @@ impl Indicator {
     pub fn append_menu(&mut self, menu: Arc<Mutex<Menu>>) {
         let mut menu = menu.lock().unwrap();
         menu.show_all();
-        &self.app_indicator.set_menu(&mut menu);
+        let _ = &self.app_indicator.set_menu(&mut menu);
     }
 
     pub fn change_icon(&mut self, image_name: &str) {
